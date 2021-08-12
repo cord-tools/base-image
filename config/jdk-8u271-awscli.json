@@ -1,0 +1,12 @@
+{
+  "name": "jdk-8u271-awscli",
+  "jdk": "jdk-8u271.rpm",
+  "jvmOpts": "-server -Xmx1024m -XX:MaxPermSize=256M -Djava.awt.headless=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044",
+  "ports": {
+    "author": 4502,
+    "publish": 4503
+  },
+  "extraDeps": [
+    "awscli"
+  ]
+}
