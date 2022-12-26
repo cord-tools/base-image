@@ -1,4 +1,4 @@
-FROM centos:7
+FROM amazonlinux:2
 
 WORKDIR /opt
 
@@ -6,7 +6,8 @@ RUN curl -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releas
 RUN chmod +x /usr/local/bin/dumb-init
 
 # Install AEM dependencies.
-RUN yum install -y epel-release \
+RUN amazon-linux-extras install -y epel \
+  && yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/libva-1.8.3-1.el7.x86_64.rpm \
   && rpm -v --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro \
   && rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm \
   && yum install -y \
