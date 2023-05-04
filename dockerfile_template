@@ -48,7 +48,7 @@ RUN rm jdk.rpm
 VOLUME /opt/aem/
 
 # AEM will run under the aem user and group.
-RUN useradd -m -s /bin/bash -u 1000 aem
+RUN useradd -m -s /bin/bash -u 1000 aem && chown -Rv aem /opt/aem
 
 # Add a label for filtering in scripts/shell.
 LABEL name="cord-base"
