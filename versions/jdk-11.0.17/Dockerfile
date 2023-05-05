@@ -8,8 +8,6 @@ RUN chmod +x /usr/local/bin/dumb-init
 # Install AEM dependencies.
 RUN amazon-linux-extras install -y epel \
   && yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/libva-1.8.3-1.el7.x86_64.rpm \
-  && rpm -v --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro \
-  && rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm \
   && yum install -y \
     openssl.x86_64 openssl.i686 openssl-devel \
     cjkuni-ukai-fonts.noarch cjkuni-uming-fonts.noarch \
@@ -41,14 +39,18 @@ RUN amazon-linux-extras install -y epel \
   && rm -rf /var/cache/yum
 
 COPY .artifacts/jdk/jdk-11.0.17.rpm jdk.rpm
-RUN yum install -y jdk.rpm
-RUN rm jdk.rpm
+COPY pkg/RPM-GPG-KEY-nux.ro RPM-GPG-KEY-nux.ro
+COPY pkg/nux-dextop-release-0-5.el7.nux.noarch.rpm nux-dextop-release-0-5.el7.nux.noarch.rpm
+RUN yum install -y jdk.rpm && \
+    rpm -v --import RPM-GPG-KEY-nux.ro && \
+    rpm -Uvh nux-dextop-release-0-5.el7.nux.noarch.rpm && \
+    rm jdk.rpm RPM-GPG-KEY-nux.ro nux-dextop-release-0-5.el7.nux.noarch.rpm
 
 # A volume for the AEM crx-quickstart directory and license file. Allows AEM data to persist across different containers.
 VOLUME /opt/aem/
 
 # AEM will run under the aem user and group.
-RUN useradd -m -s /bin/bash -u 1000 aem
+RUN useradd -m -s /bin/bash -u 1000 aem && chown -Rv aem /opt/aem
 
 # Add a label for filtering in scripts/shell.
 LABEL name="cord-base"
